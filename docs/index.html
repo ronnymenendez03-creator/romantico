@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>¿Quieres andar conmigo? 🥺🤍</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --pink:#ff4fa3;
+      --pink-soft:#ff77bb;
+      --bg-dark:#0b0010;
+      --white: #ffffff;
+      --glass: rgba(255,255,255,0.06);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:var(--bg-dark);
+      color:var(--white);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow:hidden;
+    }
+
+    /* Fondo: imagen de stock (puedes reemplazarla en docs/index.html o con ?img=URL) */
+    .bg {
+      position:fixed;
+      inset:0;
+      background-size:cover;
+      background-position:center;
+      transform-origin: center;
+      animation: kenburns 18s ease-in-out infinite alternate;
+      filter: saturate(1.05) contrast(1.03);
+    }
+    .overlay {
+      position:fixed; inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.6));
+      pointer-events:none;
+    }
+    .grain{ position:fixed; inset:0; background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.02), transparent 25%), radial-gradient(ellipse at 0% 100%, rgba(255,255,255,0.01), transparent 20%); mix-blend-mode:overlay; pointer-events:none; }
+
+    @keyframes kenburns{ from{ transform: scale(1.05) translateY(0); } to{ transform: scale(1.18) translateY(-4%); } }
+
+    .stage{ position:relative; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:36px; z-index:6; text-align:center; }
+
+    .card { width:min(920px, 94%); max-width:920px; background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); border-radius:20px; padding:36px; backdrop-filter: blur(8px) saturate(1.05); box-shadow: 0 8px 40px rgba(255,81,142,0.14); border: 1px solid rgba(255,255,255,0.06); position:relative; }
+
+    h1{ font-family: "Playfair Display", serif; font-weight:700; color:var(--white); font-size: clamp(28px, 4.4vw, 48px); letter-spacing:0.6px; margin:0; line-height:1.05; text-transform:uppercase; text-shadow: 0 6px 30px rgba(0,0,0,0.6); transform-origin:center; opacity:0; animation: appear 1s cubic-bezier(.2,.9,.27,1) .3s forwards; }
+
+    .subtitle{ margin-top:14px; color:rgba(255,255,255,0.9); font-size: clamp(15px, 2vw, 18px); font-weight:300; opacity:0; animation: appear 1s cubic-bezier(.2,.9,.27,1) .6s forwards; }
+
+    @keyframes appear{ from{ transform: translateY(10px) scale(.985); opacity:0; filter:blur(6px)} to{ transform: translateY(0) scale(1); opacity:1; filter:blur(0)} }
+
+    .actions{ margin-top:22px; display:flex; gap:12px; justify-content:center; align-items:center; flex-wrap:wrap;}
+    .btn { background: linear-gradient(90deg,var(--pink),var(--pink-soft)); color:white; padding:12px 26px; border-radius:999px; border:none; font-weight:600; cursor:pointer; box-shadow: 0 8px 30px rgba(255,81,142,0.18); transform: translateZ(0); transition: transform .18s ease, box-shadow .18s ease, opacity .18s; }
+    .btn:active{ transform: translateY(1px) scale(.998) }
+    .btn.secondary{ background: transparent; border:1px solid rgba(255,255,255,0.12); color:var(--white); padding:10px 20px; }
+
+    .heart{ position:fixed; pointer-events:none; z-index:7; color:var(--pink); font-size:20px; opacity:.95; text-shadow: 0 6px 18px rgba(255,80,140,0.22); will-change: transform, opacity; }
+
+    .final-overlay{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg, rgba(0,0,0,0.65), rgba(0,0,0,0.85)); z-index:20; color:white; padding:28px; opacity:0; pointer-events:none; transition: opacity .45s ease; text-align:center; }
+    .final-overlay.show{ opacity:1; pointer-events:auto; }
+
+    .final-card{ max-width:900px; border-radius:18px; padding:28px; background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.05); box-shadow: 0 30px 80px rgba(0,0,0,0.6); }
+    .final-card h2{ font-family: "Playfair Display", serif; font-size:clamp(22px,3.2vw,34px); margin:0 0 10px 0}
+    .final-card p{ margin:0; font-size:18px; opacity:.95; }
+
+    .music-toggle{ position:fixed; right:18px; bottom:18px; z-index:15; display:flex; gap:10px; align-items:center; }
+    .music-toggle button{ background: rgba(255,255,255,0.06); border-radius:999px; padding:10px 12px; border:1px solid rgba(255,255,255,0.06); color:white; cursor:pointer; }
+    .hint{ font-size:13px; color:rgba(255,255,255,0.78); opacity:0.95; }
+
+    @media (max-width:520px){ .card{ padding:22px; border-radius:14px } h1{ font-size:26px } }
+  </style>
+</head>
+<body>
+
+  <!-- Fondo: imagen de stock temporal. Puedes reemplazar con ?img=URL o subir photo.jpg en docs/ junto al HTML. -->
+  <div id="bg" class="bg" aria-hidden="true"></div>
+  <div class="overlay" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <main class="stage" role="main">
+    <section class="card" aria-labelledby="titulo">
+      <h1 id="titulo">[QUIERES ANDAR CONMIGO 🥺🤍..?]</h1>
+      <div class="subtitle">Desde que llegaste, haces mis días más bonitos. ¿Quieres compartir momentos conmigo?</div>
+
+      <div class="actions" role="group" aria-label="Acciones">
+        <button class="btn" id="acceptBtn" aria-pressed="false">Sí, acepto ❤️</button>
+        <button class="btn secondary" id="maybeBtn">Quiero pensarlo 💭</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="final" class="final-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="final-card" id="finalCard">
+      <h2>💖 Gracias por aceptar</h2>
+      <p>Prometo hacerte muy feliz. Te quiero muchísimo. 🌹❤️</p>
+    </div>
+  </div>
+
+  <!-- audio placeholder (no música incluida por defecto) -->
+  <audio id="music" preload="auto" loop aria-hidden="true"></audio>
+
+  <div class="music-toggle" aria-hidden="true">
+    <div class="hint">Música</div>
+    <button id="playMusic" title="Reproducir / Pausar música" aria-pressed="false">▶︎</button>
+  </div>
+
+<script>
+  // Imagen de stock temporal (Unsplash). Puedes reemplazar con ?img=URL o subir photo.jpg en docs/ junto al HTML.
+  const stockImage = 'https://images.unsplash.com/photo-1504198266289-1659872e6590?auto=format&fit=crop&w=1650&q=80';
+  const bgEl = document.getElementById('bg');
+  const urlParams = new URLSearchParams(location.search);
+  const imgParam = urlParams.get('img');
+  const imageUrl = imgParam ? imgParam : stockImage;
+
+  (function setBackground(src){
+    const img = new Image();
+    img.onload = ()=> { bgEl.style.backgroundImage = `url('${src}')`; };
+    img.onerror = () => { bgEl.style.backgroundImage = "linear-gradient(135deg,#120012,#2a002a)"; };
+    img.src = src;
+  })(imageUrl);
+
+  function spawnHeart(){
+    const h = document.createElement('div');
+    h.className = 'heart';
+    h.textContent = '❤';
+    const size = 12 + Math.random()*28;
+    h.style.fontSize = size + 'px';
+    h.style.left = (10 + Math.random()*80) + 'vw';
+    h.style.top = (60 + Math.random()*30) + 'vh';
+    h.style.opacity = (0.6 + Math.random()*0.4);
+    document.body.appendChild(h);
+    const dur = 5000 + Math.random()*6000;
+    h.animate([
+      { transform: `translateY(0) scale(${0.65})`, opacity:h.style.opacity },
+      { transform: `translateY(-140px) scale(1)`, opacity:0 }
+    ], { duration: dur, easing:'cubic-bezier(.2,.8,.2,1)'});
+    setTimeout(()=> h.remove(), dur+100);
+  }
+  setInterval(spawnHeart, 420);
+
+  const acceptBtn = document.getElementById('acceptBtn');
+  const maybeBtn = document.getElementById('maybeBtn');
+  const final = document.getElementById('final');
+  const music = document.getElementById('music');
+  const playMusic = document.getElementById('playMusic');
+
+  acceptBtn.addEventListener('click', () => {
+    final.classList.add('show');
+    final.setAttribute('aria-hidden','false');
+    if (music && music.src){ music.play().catch(()=>{}); playMusic.textContent = '⏸'; playMusic.setAttribute('aria-pressed','true'); }
+  });
+
+  maybeBtn.addEventListener('click', ()=>{ maybeBtn.animate([{ transform:'scale(1)' },{ transform:'scale(1.06)'},{ transform:'scale(1)'}], { duration:420 }); });
+
+  playMusic.addEventListener('click', ()=>{
+    if (!music.src){ alert('No se detectó music.mp3. Si quieres música, sube un archivo llamado "music.mp3" al mismo directorio o usa ?music=URL'); return; }
+    if (music.paused){ music.play(); playMusic.textContent = '⏸'; playMusic.setAttribute('aria-pressed','true'); } else { music.pause(); playMusic.textContent = '▶︎'; playMusic.setAttribute('aria-pressed','false'); }
+  });
+
+  final.addEventListener('click', (e)=>{ if (e.target === final) closeFinal(); });
+  document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeFinal(); });
+  function closeFinal(){ final.classList.remove('show'); final.setAttribute('aria-hidden','true'); }
+
+</script>
+</body>
+</html>
